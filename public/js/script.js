@@ -67,7 +67,8 @@ tinymce.init({
   'link image'
 });
 
-$('#submitNewPost').click(function() {
+$('#submitNewPost').click(function(event) {
+  event.preventDefault();
   var articleTitle = $('#articleTitle').val();
   var articleContent = tinymce.get('articleContent').getContent();
 
@@ -77,9 +78,24 @@ $('#submitNewPost').click(function() {
   } else {
     saveNewArticle(articleTitle, articleContent).then(function () {
       alert('data saved');
-      window.location.href = "/myaccount";
+      window.location.href = '/myaccount';
     });
   }
+});
+
+$('#blogPostsList').load(function() {
+  userArticlesRef.on('child_added', function(data) {
+    console.log(data);
+
+    $('#blogPostsList').html('<ul class="collapsible" data-collapsible="'
+     + 'accordion">');
+    $('#blogPostsList').appendTo('<li><div class="collapsible-header">' +
+      '<strong>' + snapshot.val().title + '</strong> - ' +
+      snapshot.val().author + '</div>');
+    $('#blogPostsList').appendTo('<div class="collapsible-body"><p>' +
+      snapshot.val().content + '</p></div></li></ul>');
+  });
+
 });
 
  function saveNewArticle(articleTitle, articleContent) {
