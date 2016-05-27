@@ -29,6 +29,19 @@ p {
   line-height: 1.4rem;
 }
 
+.btn-group {
+	display: inline-table;
+	font-size: 1rem;
+	/* margin-left: 1rem; */
+}
+
+.btn-group .btn {
+	padding: 0 0.5rem;
+}
+
+.note-codable {
+  min-height: 300px;
+}
 .button-collapse {
   color: #26a69a;
 }

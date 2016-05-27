@@ -35,22 +35,4 @@ app.use('*',function(req,res){
   res.sendFile(path + 'error.html');
 });
 
-/*app.listen(3000,function(){
-  console.log('Live at Port 3000');
-});*/
-/*
-var firebase = require('firebase');
-
-firebase.initializeApp({
-  serviceAccount: 'firebase/AndeBlogs-204fd2ea31a0.json',
-  databaseURL: 'https://andeblogs.firebaseio.com'
-});
-
-var db = firebase.database();
-var ref = db.ref("restricted_access/secret_document");
-ref.once("value", function(snapshot) {
-  console.log(snapshot.val());
-});
-*/
-
 module.exports = app;

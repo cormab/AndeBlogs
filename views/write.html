@@ -5,8 +5,6 @@
   <meta name='viewport' content='width=device-width, initial-scale=1,
    maximum-scale=1.0, user-scalable=no'/>
   <title>AndeBlogs Blogging Platform</title>
-
-  <!-- CSS  -->
   <link href='https://fonts.googleapis.com/icon?family=Material+Icons'
   rel='stylesheet'>
   <link href='css/materialize.css' type='text/css' rel='stylesheet'
@@ -16,10 +14,11 @@
 </head>
 <body>
   <div id="header"></div>
-
+  <form action=''>
   <div class='container'>
     <div class='section'>
       <div class='container'>
+        <h5><br>Create an Article<br><br></h5>
         <div class="input-field col s12">
           <input id="articleTitle" type="text" class="validate">
           <label for="articleTitle">Title</label>
@@ -28,12 +27,21 @@
     </div>
     <div class='section'>
       <div class='container'>
-        <div class="input-field col s12 editor">
+        <div class="row">
+          <div class="input-field col s12">
+            <textarea id="articleContent" class="materialize-textarea">
+            </textarea>
+          </div>
         </div>
-
+      </div>
+    </div>
+    <div class='section'>
+      <div class='container'>
+        <button id='submitNewPost' class='btn'>Save Article</button>
       </div>
     </div>
   </div>
+</form>
 
   <div id='footer'></div>
   <script
@@ -45,7 +53,7 @@
   <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
   <script src='js/jquery-2.2.4.min.js'></script>
   <script src='js/materialize.min.js'></script>
-  <script src='js/materialNote.min.js'></script>
+  <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
   <script src='js/script.js'></script>
 
 </body>

@@ -9,11 +9,11 @@ var config = {
 var app = firebase.initializeApp(config);
 var auth = app.auth();
 var ui = new firebaseui.auth.AuthUI(auth);
+var user = firebase.auth().currentUser;
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    var user = firebase.auth().currentUser;
-    console.log(user);
+    user = firebase.auth().currentUser;
     var userId = user.uid;
     var name = user.displayName;
     var email = user.email;
@@ -24,143 +24,120 @@ firebase.auth().onAuthStateChanged(function(user) {
     var followers=0;
     var following=0;
 
-    //Window.localStorage.setItem('user', JSON.stringify(user));
+    var userArticlesRef = firebase.database().ref('user-articles/' + userId);
+    var recentArticlesRef = firebase.database().ref('articles').limitToLast(10);
+    var popularArticlesRef = firebase.database().ref('user-' +
+      'articles').orderByChild('likeCount').limitToLast(10);
 
 $('#header').load('/includes/header.html',function() {
-  if (user) {
-    console.log('not null');
-    $('#switchNav').html(
-      '<li><a id="myaccount" href="/myaccount">My Account</a></li>' +
-      '<li><a id="logout" href="#" onclick="logout()">Logout</a></li>'
+  $('#switchNav').html(
+    '<li><a id="myaccount" href="/myaccount">My Account</a></li>' +
+    '<li><a id="logout" href="#">Logout</a></li>'
     );
-  } else {
-    $('#switchNav').html(
-      '<li><a id="loginTrigger" class="btn" href="#loginModal">' +
-      'Sign in</a></li>'
-    );
-    $('#loginTrigger').click(function() {
-      var uiConfig = {
-        'signInSuccessUrl': '/myaccount',
-        'signInOptions': [
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          firebase.auth.EmailAuthProvider.PROVIDER_ID
-        ],
-        // Terms of service url.
-        'tosUrl': '#',
-      };
-      ui.start('#firebaseui-auth-container', uiConfig);
-      $('#loginModal').openModal();
-    });
-  }
   $('.button-collapse').sideNav();
   $('#logout').click(function() {
-    console.log('logging out');
-    Window.localStorage.clear();
-    firebase.auth().signOut().then(function() {
-      //$('#header').after('<p class="text-red">Logout failed</p>')
-      console.log('gogged out')
-    }, function(error) {console.log('Error: ' + error);
-    });
+    logout();
   });
+
 });
 $('#footer').load('/includes/footer.html');
-function logout() {
-  console.log('logging out');
-  //Window.localStorage.clear();
-  firebase.auth().signOut().then(function() {
-    //$('#header').after('<p class="text-red">Logout failed</p>')
-    console.log('gogged out')
-    }, function(error) {console.log('Error: ' + error)
-  });
-}
 
 $('#myProfile').ready(function() {
-  //function to calculate number of followers
-  //function calculate number of followining
   $('#name').html(name);
   $('#picture').html('<img src="' + photoUrl + '" />');
   $('#followers').html(followers);
   $('#following').html(following);
-  displayBlogPostsList();
-  displayLikedPostList();
+  //fetchArticles(userArticlesRef, '#blogPostsList');
+  //fetchArticles(recentArticlesRef, '#newestArticles');
+  //fetchPosts(likedPostsRef, '#likedPostsList');
+  //fetchArticles(popularArticlesRef, '#popularArticles');
 });
 
-function displayBlogPostsList() {
-  console.log('display blog');
-  if(!(user.articles == null)) {
-    console.log('found: ' + user.articles);
-    $('#blogPostsList').html('<ul>');
-    user.articles.forEach(function(article) {
-      $('#blogPostsList').appendTo('<li>'+article.title+'</li>');
-    });
-    $('#blogPostsList').appendTo('</ul>');
-  } else {
-    console.log('nothing found');
-    $('#blogPostsList').html('<p>No posts have been wriiten</p>');
-  }
-
-}
-
-function displayLikedPostList() {
-  if(!(user.likes == null)) {
-    $('#likedPostsList').html('<ul>');
-    user.likes.forEach(function(like) {
-      $('#likedPostsList').appendTo('<li>'+like.article.title+'</li>');
-    });
-    $('#likedPostsList').appendTo('</ul>');
-  } else {
-    $('#likedPostsList').html('<p>You have not liked any posts</p>');
-  }
-}
-
-var toolbar = [
-  ['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
-  ['fonts', ['fontsize', 'fontname']],
-  ['undo', ['undo', 'redo', 'help']],
-  ['ckMedia', ['ckImageUploader', 'ckVideoEmbeeder']],
-  ['misc', ['link', 'picture', 'table', 'hr', 'codeview', 'fullscreen']],
-  ['para',
-    ['ul', 'ol', 'paragraph', 'leftButton', 'centerButton', 'rightButton',
-    'justifyButton', 'outdentButton', 'indentButton']],
-  ['height', ['lineheight']],
-  ];
-
-$('.editor').materialnote({
-    toolbar: toolbar,
-    height: 550,
-    minHeight: 100,
-    defaultBackColor: '#e0e0e0'
-  });
+tinymce.init({
+  selector: '#articleContent',
+  menubar: false,
+  plugins: [
+    'advlist autolink link image lists charmap print preview hr anchor',
+    'pagebreak spellchecker searchreplace wordcount visualblocks visualchars',
+    'code fullscreen insertdatetime media nonbreaking save table contextmenu',
+    'directionality emoticons template paste textcolor'
+  ],
+  toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft ' +
+  'aligncenter alignright alignjustify | bullist numlist outdent indent | ' +
+  'link image'
+});
 
 $('#submitNewPost').click(function() {
-  var articleTitle = $('#articleTitle').html;
-  var articleContent = $('#articleContent').html;
-  var d = new Date();
+  var articleTitle = $('#articleTitle').val();
+  var articleContent = tinymce.get('articleContent').getContent();
 
-  var articleData = {
-    author: displayName,
-    userId: userId,
-    title: articleTitle,
-    content: articleContent,
-    likeCount: 0
-  };
-   var newArticleKey = firebase.database().ref().child('articles').push.key;
-   var updates ={};
-   updates['/articles/' + newArticleKey] = articleData;
-   updates['/user-articles/' + newArticleKey] = articleData;
-   return firebase.database().ref().update(updates);
+  if (articleTitle === '' || articleContent === '') {
+    console.log(articleContent);
+    alert('Please make sure to enter a title and content');
+  } else {
+    saveNewArticle(articleTitle, articleContent).then(function () {
+      alert('data saved');
+      window.location.href = "/myaccount";
+    });
+  }
 });
 
+ function saveNewArticle(articleTitle, articleContent) {
+   var articleData = {
+     author: name,
+     userId: userId,
+     title: articleTitle,
+     content: articleContent,
+     likeCount: 0
+   };
+    var newArticleKey = firebase.database().ref().child('articles').push().key;
+    var updates ={};
+    updates['/articles/' + newArticleKey] = articleData;
+    updates['/user-articles/' + userId + newArticleKey] = articleData;
+    return firebase.database().ref().update(updates);
+  }
 
+ function displayList(title, author, content, elementId) {
+   $('\'' + elementId + '\'').html('<ul class="collapsible" data-collapsible="'
+    + 'accordion">');
+   $('\'' + elementId + '\'').appendTo('<li><div class="collapsible-header">' +
+     '<strong>' + title + '</strong> - ' + author + '</div>');
+   $('\'' + elementId + '\'').appendTo('<div class="collapsible-body"><p>' +
+     content + '</p></div></li>');
+ }
 
+ function logout() {
+   firebase.auth().signOut().then(function() {
+   }, function(error) {console.log('Error: ' + error);
+   });
+   window.location.href = "/";
+ }
+
+ function fetchArticles(articlesRef, elementId) {
+   articlesRef.on('value', function(data) {
+     console.log(data.val());
+     displayList(data.val().title, data.val().author, data.val().body,
+       elementId);
+   });
+ };
+} else {
+  $('#header').load('/includes/header.html',function() {
+      $('#switchNav').html(
+        '<li><a id="loginTrigger" class="btn" href="#loginModal">' +
+        'Sign in</a></li>'
+      );
+      $('#loginTrigger').click(function() {
+        var uiConfig = {
+          'signInSuccessUrl': '/myaccount',
+          'signInOptions': [
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            firebase.auth.EmailAuthProvider.PROVIDER_ID
+          ],
+          'tosUrl': '#',
+        };
+        ui.start('#firebaseui-auth-container', uiConfig);
+        $('#loginModal').openModal();
+      });
+    });
 }
 });
-/*
-function listArticles() {}
-function listPopularArticles() {}
-function listNewestArticles() {}
-function listFollowedUsersArticles() {}
-function writeArticle() {}
-function listFollowers() {}
-function displayArticle() {}
-*/

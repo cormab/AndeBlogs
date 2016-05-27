@@ -2,15 +2,19 @@
 <html lang='en'>
 <head>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
-  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1,
+    maximum-scale=1.0, user-scalable=no'/>
   <title>AndeBlogs Blogging Platform</title>
 
   <!-- CSS  -->
-  <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/icon?family=Material+Icons'
+    rel='stylesheet'>
   <link type='text/css' rel='stylesheet'
     href='https://www.gstatic.com/firebasejs/ui/0.4.0/firebase-ui-auth.css' />
-  <link href='css/materialize.css' type='text/css' rel='stylesheet' media='screen,projection'/>
-  <link href='css/style.css' type='text/css' rel='stylesheet' media='screen,projection'/>
+  <link href='css/materialize.css' type='text/css' rel='stylesheet'
+    media='screen,projection'/>
+  <link href='css/style.css' type='text/css' rel='stylesheet'
+    media='screen,projection'/>
 </head>
 <body id='myProfile'>
   <div id="header"></div>
@@ -27,7 +31,7 @@
           <p>
           <span id="followers">#</span> Followers
           &nbsp;&nbsp;
-          <span id="followers">#</span> Following
+          <span id="following">#</span> Following
           <br />
           <p><a href='/write'>Write new post</a></p>
         </p>
@@ -37,11 +41,11 @@
     <div class="section">
       <div class="row">
         <div class='col l7 s12'>
-          <p class='bold'>My Blog Posts</p>
-          <p id='blogPostsList'></p>
+          <p><strong>My Blog Posts</strong></p>
+          <div id='blogPostsList'></div>
         </div>
         <div class='col l5 s12'>
-          <p class='bold'>Blog Posts I Like</p>
+          <p><strong>Blog Posts I Like</strong></p>
           <div id='likedPostsList'></div>
         </div>
       </div>
