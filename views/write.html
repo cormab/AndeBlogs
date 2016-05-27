@@ -2,29 +2,40 @@
 <html lang='en'>
 <head>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
-  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1,
+   maximum-scale=1.0, user-scalable=no'/>
   <title>AndeBlogs Blogging Platform</title>
 
   <!-- CSS  -->
-  <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
-  <link type='text/css' rel='stylesheet'
-    href='https://www.gstatic.com/firebasejs/ui/0.4.0/firebase-ui-auth.css' />
-  <link href='css/materialize.css' type='text/css' rel='stylesheet' media='screen,projection'/>
-  <link href='css/style.css' type='text/css' rel='stylesheet' media='screen,projection'/>
+  <link href='https://fonts.googleapis.com/icon?family=Material+Icons'
+  rel='stylesheet'>
+  <link href='css/materialize.css' type='text/css' rel='stylesheet'
+  media='screen,projection'/>
+  <link href='css/style.css' type='text/css' rel='stylesheet'
+  media='screen,projection'/>
 </head>
 <body>
   <div id="header"></div>
 
   <div class='container'>
     <div class='section'>
-      <div class='row'>
-        <p>something</p>
+      <div class='container'>
+        <div class="input-field col s12">
+          <input id="articleTitle" type="text" class="validate">
+          <label for="articleTitle">Title</label>
+        </div>
+      </div>
+    </div>
+    <div class='section'>
+      <div class='container'>
+        <div class="input-field col s12 editor">
+        </div>
+
       </div>
     </div>
   </div>
 
   <div id='footer'></div>
-
   <script
     src='https://www.gstatic.com/firebasejs/live/3.0/firebase-app.js'></script>
   <script
@@ -33,8 +44,8 @@
     </script>
   <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
   <script src='js/jquery-2.2.4.min.js'></script>
-  <script src='js/init.js'></script>
   <script src='js/materialize.min.js'></script>
+  <script src='js/materialNote.min.js'></script>
   <script src='js/script.js'></script>
 
 </body>

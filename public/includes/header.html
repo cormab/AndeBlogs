@@ -1,16 +1,23 @@
 <nav class='white' role='navigation'>
   <div class='nav-wrapper container'>
     <a id='logo-container' href='/' class='brand-logo'>AndeBlogs</a>
-    <ul class='right hide-on-med-and-down'>
-      <li><a id='signupTrigger' href='/signup'>Sign Up</a></li>
-      <li><a 'loginTrigger' href='#loginModal'>Login</a></li>
+    <ul id='switchNav' class='right hide-on-med-and-down'>
+      <li>
+        <a id='loginTrigger' class='btn' href='#loginModal'>Sign in</a>
+      </li>
     </ul>
-
     <ul id='nav-mobile' class='side-nav'>
-      <li><a href='/signup'>Sign Up</a></li>
-      <li><a href='/'>Login</a></li>
+      <li>
+        <a id='loginTrigger' class='btn' href='#loginModal'>Sign in</a>
+      </li>
     </ul>
     <a href='#' data-activates='nav-mobile' class='button-collapse'>
       <i class='material-icons'>menu</i></a>
   </div>
 </nav>
+
+<div id='loginModal' class='modal'>
+  <div class='modal-content'>
+    <div id='firebaseui-auth-container'></div>
+  </div>
+</div>

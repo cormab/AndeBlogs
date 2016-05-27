@@ -21,6 +21,14 @@ router.get('/signup',function(req,res){
   res.sendFile(path + 'signup.html');
 });
 
+router.get('/myaccount',function(req,res){
+  res.sendFile(path + 'myaccount.html');
+});
+
+router.get('/write',function(req,res){
+  res.sendFile(path + 'write.html');
+});
+
 app.use('/',router);
 
 app.use('*',function(req,res){
@@ -30,7 +38,7 @@ app.use('*',function(req,res){
 /*app.listen(3000,function(){
   console.log('Live at Port 3000');
 });*/
-
+/*
 var firebase = require('firebase');
 
 firebase.initializeApp({
@@ -43,4 +51,6 @@ var ref = db.ref("restricted_access/secret_document");
 ref.once("value", function(snapshot) {
   console.log(snapshot.val());
 });
+*/
+
 module.exports = app;
